@@ -82,18 +82,6 @@ Best Model Identified:
 
 ---
 
-## 📁 Project Structure
-
-project/
-├── data/ # CSV datasets
-├── notebooks/ # Jupyter notebooks (EDA & analysis)
-├── app.py # Main application
-├── requirements.txt
-└── README.md
-
-
----
-
 ## 🚀 How to Run
 
 1. Install dependencies:
