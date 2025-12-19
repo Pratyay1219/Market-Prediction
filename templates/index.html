@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+
+{% block title %}Home – Educational Price Prediction{% endblock %}
+
+{% block content %}
+  <style>
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 3rem;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .hero-section h1 {
+      color: white;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .hero-section .lead {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.2rem;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      height: 100%;
+      border: 2px solid #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: #667eea;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.15);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .data-summary-card {
+      background: linear-gradient(135deg, #f5f7fa 0%, #ffffff 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 2px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .data-summary-card h5 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .instrument-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .instrument-item {
+      background: white;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+      font-weight: 600;
+      color: #2d3748;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .instrument-item::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+    }
+
+    .disclaimer-box {
+      background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+      border-left: 4px solid #ff9800;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+  </style>
+
+  <div class="hero-section">
+    <h1 class="mb-3">Educational Stock & Commodity Price Prediction System</h1>
+    <p class="lead mb-0">
+      This web app demonstrates <strong>end-to-end predictive analytics</strong> using
+      historical futures data for indices and commodities. It is designed for
+      exams, interviews, and portfolio showcase – not for live trading.
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <h4 class="mb-4" style="color: #2d3748; font-weight: 700;">What this project demonstrates</h4>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Data Preprocessing</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">Real EOD futures data processing and cleaning</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Supervised Learning</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">Linear, Polynomial & Random Forest regression</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Model Evaluation</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">MAE, MSE, RMSE, R² metrics</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Time-Series Splits</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">Avoiding data leakage with proper validation</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Neural Networks</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">LSTM for sequence modeling (experimental)</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+          </div>
+          <h6 style="font-weight: 700; color: #2d3748;">Bias–Variance</h6>
+          <p style="color: #718096; margin: 0; font-size: 0.9rem;">Comparison of simple vs. complex models</p>
+        </div>
+      </div>
+
+      <p class="mt-4" style="color: #4a5568; line-height: 1.7;">
+        Use the <strong>Showcase</strong> page to browse HTML exports of the Jupyter
+        notebooks, and the <strong>Prediction</strong> page to run models and
+        compare classical regression against an LSTM sequence model.
+      </p>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="data-summary-card">
+        <h5>Data Summary</h5>
+        <p style="color: #718096; margin-bottom: 1rem; font-weight: 600;">Available Instruments:</p>
+        <div class="instrument-list">
+          <div class="instrument-item">BANKNIFTY</div>
+          <div class="instrument-item">NIFTY</div>
+          <div class="instrument-item">GOLD</div>
+          <div class="instrument-item">SILVER</div>
+          <div class="instrument-item">CRUDE OIL</div>
+          <div class="instrument-item">NATURAL GAS</div>
+        </div>
+        <p style="color: #4a5568; font-size: 0.95rem; line-height: 1.6;">
+          Each dataset contains <strong>datetime, open, high, low, close, volume</strong>
+          with EOD (End-of-Day) prices from <strong>01‑07‑2021</strong> to
+          <strong>20‑01‑2025</strong>.
+        </p>
+      </div>
+
+      <div class="disclaimer-box">
+        <div style="display: flex; align-items: start; gap: 1rem;">
+          <svg width="24" height="24" fill="none" stroke="#ff9800" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          </svg>
+          <div>
+            <strong style="color: #2d3748;">Disclaimer:</strong>
+            <p style="color: #4a5568; margin: 0.5rem 0 0 0; font-size: 0.9rem;">
+              This is an academic project. It does not generate buy/sell signals and should not be used as a trading system or financial advice.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

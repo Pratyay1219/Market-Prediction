@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Showcase – Notebooks & Analysis{% endblock %}
+
+{% block content %}
+  <style>
+    .showcase-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .showcase-header h1 {
+      color: white;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+    }
+
+    .showcase-header p {
+      color: rgba(255, 255, 255, 0.95);
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .instrument-navigator {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .navigator-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #718096;
+      margin-bottom: 1rem;
+    }
+
+    .instrument-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .instrument-btn {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      color: #4a5568;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .instrument-btn:hover {
+      border-color: #667eea;
+      background: linear-gradient(135deg, #f7f9ff 0%, #ffffff 100%);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.15);
+      color: #667eea;
+    }
+
+    .instrument-btn.active {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      color: white;
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
+    }
+
+    .instrument-btn.active:hover {
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .instrument-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(102, 126, 234, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .instrument-btn.active .instrument-icon {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .instrument-btn:hover .instrument-icon {
+      background: rgba(102, 126, 234, 0.15);
+    }
+
+    .instrument-btn.active:hover .instrument-icon {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .notebook-container {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .notebook-container iframe {
+      border: none;
+      width: 100%;
+      min-height: 800px;
+    }
+
+    .tip-box {
+      background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
+      border-left: 4px solid #4facfe;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .tip-icon {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  </style>
+
+  <div class="showcase-header">
+    <h1>Notebook Showcase</h1>
+    <p>
+      Explore <strong>HTML exports of Jupyter notebooks</strong> featuring EDA, 
+      feature engineering, and model comparison for each instrument.
+    </p>
+  </div>
+
+  <div class="instrument-navigator">
+    <div class="navigator-title">Select Instrument</div>
+    <div class="instrument-buttons">
+      {% for name in instruments %}
+        <a href="?instrument={{ name }}" 
+           class="instrument-btn {% if name == selected_instrument %}active{% endif %}">
+          <div class="instrument-icon">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/>
+            </svg>
+          </div>
+          <span>{{ name }}</span>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="notebook-container">
+    <iframe
+      src="{{ url_for('showcase_file', filename=showcase_files[selected_instrument]) }}"
+      title="Notebook Showcase"
+    ></iframe>
+  </div>
+
+  <div class="tip-box">
+    <svg class="tip-icon" fill="none" stroke="#4facfe" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+    </svg>
+    <p style="color: #2d3748; margin: 0; line-height: 1.6;">
+      <strong>Tip for viva/interview:</strong> Use this page to walk through your 
+      <strong>EDA process</strong>, <strong>feature choices</strong>, and 
+      <strong>model comparison</strong> before showing the live prediction page.
+    </p>
+  </div>
+{% endblock %}

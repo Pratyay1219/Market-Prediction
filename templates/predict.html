@@ -1,0 +1,435 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction – Classical ML vs LSTM{% endblock %}
+
+{% block content %}
+  <style>
+    .predict-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 2rem 2.5rem;
+      color: white;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    }
+
+    .predict-header h1 {
+      color: white;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      font-size: 2.5rem;
+    }
+
+    .predict-header p {
+      color: rgba(255, 255, 255, 0.95);
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .prediction-form {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+    }
+
+    .form-section-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #718096;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .model-family-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .radio-card {
+      position: relative;
+    }
+
+    .radio-card input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+    }
+
+    .radio-card label {
+      display: block;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .radio-card input[type="radio"]:checked + label {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-color: #667eea;
+      color: white;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .radio-card label:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .radio-card input[type="radio"]:checked + label:hover {
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.35);
+    }
+
+    .btn-run-prediction {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      border: none;
+      padding: 1rem 2.5rem;
+      font-weight: 700;
+      border-radius: 12px;
+      color: white;
+      box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+    }
+
+    .btn-run-prediction:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(79, 172, 254, 0.4);
+      color: white;
+    }
+
+    .btn-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .result-card {
+      background: linear-gradient(135deg, #f7f9ff 0%, #ffffff 100%);
+      border-radius: 16px;
+      padding: 2rem;
+      border: 2px solid #e2e8f0;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .predicted-price {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 1rem 0;
+    }
+
+    .result-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .info-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .info-label {
+      font-size: 0.875rem;
+      color: #718096;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+      color: #2d3748;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .metrics-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .metrics-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .metric-item {
+      text-align: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f7f9ff 0%, #ffffff 100%);
+      border-radius: 10px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: #718096;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .warning-box {
+      background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%);
+      border-left: 4px solid #ff9800;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .experimental-note {
+      background: linear-gradient(135deg, #e6f7ff 0%, #f0f9ff 100%);
+      border-left: 4px solid #4facfe;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+
+  <div class="predict-header">
+    <h1>Prediction – Next Trading Day EOD Close</h1>
+    <p>
+      Run <strong>supervised learning models</strong> on historical EOD data to predict 
+      the <strong>next trading day's closing price</strong>. Compare <strong>classical 
+      regression</strong> models with an <strong>LSTM neural network (experimental)</strong>.
+    </p>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger d-flex align-items-start gap-3">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <div>
+        <strong>Error:</strong> {{ error }}
+      </div>
+    </div>
+  {% endif %}
+
+  <form method="post" class="prediction-form">
+    <div class="form-section-title">Configuration</div>
+    
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <label for="instrument" class="form-label">Instrument</label>
+        <select id="instrument" name="instrument" class="form-select" required>
+          {% for inst in instruments %}
+            <option value="{{ inst }}">{{ inst }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label for="window_size" class="form-label">Look-back Window (days)</label>
+        <input
+          type="number"
+          id="window_size"
+          name="window_size"
+          class="form-control"
+          min="5"
+          max="20"
+          value="10"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="form-section-title">Model Selection</div>
+    
+    <div class="row g-4 mb-4">
+      <div class="col-md-6">
+        <label class="form-label d-block mb-3">Model Family</label>
+        <div class="model-family-options">
+          <div class="radio-card">
+            <input
+              type="radio"
+              name="model_family"
+              id="model_family_classical"
+              value="classical"
+              checked
+            />
+            <label for="model_family_classical">
+              Classical Regression
+            </label>
+          </div>
+          <div class="radio-card">
+            <input
+              type="radio"
+              name="model_family"
+              id="model_family_lstm"
+              value="lstm"
+            />
+            <label for="model_family_lstm">
+              LSTM (Experimental)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6" id="classical-model-select">
+        <label for="classical_model" class="form-label">Classical Regression Model</label>
+        <select id="classical_model" name="classical_model" class="form-select">
+          {% for m in classical_models %}
+            <option value="{{ m }}">{{ m }}</option>
+          {% endfor %}
+        </select>
+        <div class="form-text">
+          Compare simple linear vs. polynomial vs. ensemble models to illustrate 
+          <strong>bias–variance trade-off</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button type="submit" class="btn-run-prediction">
+        <svg class="btn-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Run Prediction
+      </button>
+    </div>
+  </form>
+
+  {% if result %}
+    <div class="result-card">
+      <div class="text-center">
+        <h4 style="color: #718096; font-weight: 600; margin-bottom: 0.5rem;">
+          Predicted Next Day Close
+        </h4>
+        <div class="predicted-price">
+          {{ result.predicted_price | round(2) }}
+        </div>
+      </div>
+
+      <div class="result-info">
+        <div class="info-item">
+          <div class="info-label">Instrument</div>
+          <div class="info-value">{{ result.instrument }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Model Type</div>
+          <div class="info-value">{{ result.model_type }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Model Name</div>
+          <div class="info-value">{{ result.model_name }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Last Available Date</div>
+          <div class="info-value">{{ result.last_date }}</div>
+        </div>
+      </div>
+
+      {% if result.model_type == "Classical Regression" %}
+        <div class="metrics-section">
+          <div class="metrics-title">Evaluation on Test Set</div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-label">MAE</div>
+              <div class="metric-value">{{ result.mae | round(4) }}</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">MSE</div>
+              <div class="metric-value">{{ result.mse | round(4) }}</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">RMSE</div>
+              <div class="metric-value">{{ result.rmse | round(4) }}</div>
+            </div>
+            <div class="metric-item">
+              <div class="metric-label">R²</div>
+              <div class="metric-value">{{ result.r2 | round(4) }}</div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="metrics-section">
+          <div class="metrics-title">Evaluation on Test Set</div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <div class="metric-label">RMSE</div>
+              <div class="metric-value">{{ result.rmse | round(4) }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="experimental-note">
+          <strong>Note:</strong> LSTM is marked as <strong>experimental</strong> and is 
+          used here only to demonstrate a sequence model. It is not guaranteed to 
+          outperform classical baselines.
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="warning-box mt-4">
+    <svg width="24" height="24" fill="none" stroke="#ff9800" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink: 0; margin-top: 2px;">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+    </svg>
+    <div>
+      <strong>Important:</strong> All predictions are generated on <strong>historical 
+      data only</strong> with a time-series-safe split. This is an <strong>academic 
+      demonstration</strong>, not a live trading or advisory system.
+    </div>
+  </div>
+
+  <script>
+    // Simple client-side toggle of the classical model select based on radio buttons
+    const classicalRadio = document.getElementById("model_family_classical");
+    const lstmRadio = document.getElementById("model_family_lstm");
+    const classicalSelect = document.getElementById("classical-model-select");
+
+    function updateModelFamilyVisibility() {
+      if (classicalRadio.checked) {
+        classicalSelect.style.display = "block";
+      } else {
+        classicalSelect.style.display = "none";
+      }
+    }
+
+    classicalRadio.addEventListener("change", updateModelFamilyVisibility);
+    lstmRadio.addEventListener("change", updateModelFamilyVisibility);
+    updateModelFamilyVisibility();
+  </script>
+{% endblock %}
